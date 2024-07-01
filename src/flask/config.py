@@ -149,23 +149,23 @@ class Config(dict):  # type: ignore[type-arg]
 
         .. versionadded:: 2.1
         """
-        prefix = f"{prefix}_"
-        len_prefix = len(prefix)
+        prefix_ = f"{prefix}_"
+        len_prefix = len(prefix_)
 
-        for key in sorted(os.environ):
-            if not key.startswith(prefix):
-                continue
+        # Create a list to store relevant keys for sorting later
+        prefixed_keys = [
+            (key[len_prefix:], os.environ[key])
+            for key in os.environ
+            if key.startswith(prefix_)
+        ]
 
-            value = os.environ[key]
-
+        # Sort the relevant keys before processing
+        for key, value in sorted(prefixed_keys):
             try:
                 value = loads(value)
             except Exception:
                 # Keep the value as a string if loading failed.
                 pass
-
-            # Change to key.removeprefix(prefix) on Python >= 3.9.
-            key = key[len_prefix:]
 
             if "__" not in key:
                 # A non-nested key, set directly.
@@ -178,10 +178,7 @@ class Config(dict):  # type: ignore[type-arg]
 
             for part in parts:
                 # If an intermediate dict does not exist, create it.
-                if part not in current:
-                    current[part] = {}
-
-                current = current[part]
+                current = current.setdefault(part, {})
 
             current[tail] = value
 
