@@ -45,7 +45,6 @@ from .wrappers import Response as Response
 
 def __getattr__(name: str) -> t.Any:
     if name == "__version__":
-        import importlib.metadata
         import warnings
 
         warnings.warn(
@@ -55,6 +54,8 @@ def __getattr__(name: str) -> t.Any:
             DeprecationWarning,
             stacklevel=2,
         )
-        return importlib.metadata.version("flask")
+        from importlib.metadata import version
+
+        return version("flask")
 
     raise AttributeError(name)
