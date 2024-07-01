@@ -314,13 +314,15 @@ class Config(dict):  # type: ignore[type-arg]
 
         .. versionadded:: 0.11
         """
-        mappings: dict[str, t.Any] = {}
-        if mapping is not None:
-            mappings.update(mapping)
-        mappings.update(kwargs)
-        for key, value in mappings.items():
+        if mapping:
+            for key, value in mapping.items():
+                if key.isupper():
+                    self[key] = value
+
+        for key, value in kwargs.items():
             if key.isupper():
                 self[key] = value
+
         return True
 
     def get_namespace(
