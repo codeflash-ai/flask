@@ -98,12 +98,10 @@ _werkzeug_version = ""
 
 
 def _get_werkzeug_version() -> str:
-    global _werkzeug_version
+    if not hasattr(_get_werkzeug_version, "_version"):
+        _get_werkzeug_version._version = importlib.metadata.version("werkzeug")
 
-    if not _werkzeug_version:
-        _werkzeug_version = importlib.metadata.version("werkzeug")
-
-    return _werkzeug_version
+    return _get_werkzeug_version._version
 
 
 class FlaskClient(Client):
