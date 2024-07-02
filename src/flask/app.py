@@ -52,6 +52,7 @@ from .signals import request_tearing_down
 from .templating import Environment
 from .wrappers import Request
 from .wrappers import Response
+from typing import Union
 
 if t.TYPE_CHECKING:  # pragma: no cover
     from _typeshed.wsgi import StartResponse
@@ -69,10 +70,9 @@ T_template_global = t.TypeVar("T_template_global", bound=ft.TemplateGlobalCallab
 T_template_test = t.TypeVar("T_template_test", bound=ft.TemplateTestCallable)
 
 
-def _make_timedelta(value: timedelta | int | None) -> timedelta | None:
+def _make_timedelta(value: Union[timedelta, int, None]) -> Union[timedelta, None]:
     if value is None or isinstance(value, timedelta):
         return value
-
     return timedelta(seconds=value)
 
 
@@ -827,7 +827,7 @@ class Flask(App):
 
     def log_exception(
         self,
-        exc_info: (tuple[type, BaseException, TracebackType] | tuple[None, None, None]),
+        exc_info: tuple[type, BaseException, TracebackType] | tuple[None, None, None],
     ) -> None:
         """Logs an exception.  This is called by :meth:`handle_exception`
         if debugging is disabled and right before the handler is called.
