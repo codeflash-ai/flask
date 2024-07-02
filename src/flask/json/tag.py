@@ -150,8 +150,9 @@ class PassList(JSONTag):
     def check(self, value: t.Any) -> bool:
         return isinstance(value, list)
 
-    def to_json(self, value: t.Any) -> t.Any:
-        return [self.serializer.tag(item) for item in value]
+    def to_json(self, value: t.List[t.Any]) -> t.List[t.Any]:
+        tag = self.serializer.tag  # Local reference to the method for faster access
+        return [tag(item) for item in value]
 
     tag = to_json
 
