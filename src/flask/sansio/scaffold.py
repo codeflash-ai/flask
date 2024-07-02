@@ -708,11 +708,11 @@ def _endpoint_from_view_func(view_func: ft.RouteCallable) -> str:
 
 def _path_is_relative_to(path: pathlib.PurePath, base: str) -> bool:
     # Path.is_relative_to doesn't exist until Python 3.9
-    try:
-        path.relative_to(base)
-        return True
-    except ValueError:
+    path_parts = path.parts
+    base_parts = pathlib.PurePath(base).parts
+    if len(path_parts) < len(base_parts):
         return False
+    return path_parts[: len(base_parts)] == base_parts
 
 
 def _find_package_path(import_name: str) -> str:
