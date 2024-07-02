@@ -678,10 +678,8 @@ class FlaskGroup(AppGroup):
 
 
 def _path_is_ancestor(path: str, other: str) -> bool:
-    """Take ``other`` and remove the length of ``path`` from it. Then join it
-    to ``path``. If it is the original value, ``path`` is an ancestor of
-    ``other``."""
-    return os.path.join(path, other[len(path) :].lstrip(os.sep)) == other
+    """Check if `path` is an ancestor of `other`."""
+    return other.startswith(os.path.join(path, ""))
 
 
 def load_dotenv(path: str | os.PathLike[str] | None = None) -> bool:
